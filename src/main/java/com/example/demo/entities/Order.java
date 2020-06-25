@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,11 +40,14 @@ public class Order implements Serializable {
 	private Integer orderStatus;
 	
 	
-	@OneToMany(mappedBy = "id.order")
+	@OneToMany(mappedBy = "id.order" , fetch = FetchType.EAGER)
+	@JsonIgnore
 	private Set<OrderItem> items = new HashSet<>();
 	
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Payment payment;
+	
 	
 	public Order() {
 		
@@ -105,6 +109,14 @@ public class Order implements Serializable {
 
 	public void setPayment(Payment payment) {
 		this.payment = payment;
+	}
+	
+	public Double getTotal() {
+		double sum = 0;
+		for(OrderItem x : items) {
+			sum += x.getSubTotal();
+		}
+		return sum;
 	}
 
 	@Override
