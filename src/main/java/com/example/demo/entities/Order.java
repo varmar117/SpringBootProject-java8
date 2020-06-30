@@ -44,6 +44,7 @@ public class Order implements Serializable {
 	@JsonIgnore
 	private Set<OrderItem> items = new HashSet<>();
 	
+	
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Payment payment;
