@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entities.User;
 import com.example.demo.repositories.UserRepository;
@@ -33,6 +35,20 @@ public class UserService {
 	
 	public void delete(Long id) {
 		repository.deleteById(id);
+	}
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public User update(Long id, User obj) {
+		
+		User entity = repository.getOne(id);
+		updtateData(entity, obj);
+		return repository.save(entity);
+	}
+
+	private void updtateData(User entity, User obj) {
+		entity.setName(obj.getName());
+		entity.setEmail(obj.getEmail());
+		entity.setPhone(obj.getPhone());
+		
 	}
 	
 
